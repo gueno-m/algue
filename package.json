@@ -2,11 +2,14 @@
   "name": "creative-boilerplate",
   "version": "0.2.0",
   "scripts": {
-    "start": "NODE_ENV=developement webpack-dev-server",
-    "build": "cp ./src/*.html ./build/ & cp -R ./src/assets ./build/ & webpack -p"
+    "start": "webpack-dev-server",
+    "build": "cp ./src/*.html ./build/ & cp -R ./src/assets ./build/ & webpack -p",
+    "deploy": "npm run build && surge build algue.surge.sh"
   },
   "dependencies": {
-    "gl-matrix": "^3.3.0"
+    "gl-matrix": "^3.3.0",
+    "surge": "^0.21.7",
+    "three": "^0.123.0"
   },
   "paths": {},
   "devDependencies": {

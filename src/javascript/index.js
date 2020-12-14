@@ -1,90 +1,130 @@
+let pos = 6000;
+let a = 0;
+let title
 
+ function preload() {
+    algue = loadImage('assets/algue.png');
+    Helvetica = loadFont("../assets/HelveticaNowMicro-Medium.ttf");
+    vid = createVideo('../assets/test.mp4', vidLoad);
+    vid.size(windowWidth, windowHeight)
+ }
 
-import Mouse from "./utils/mouse"
-import Easing from "./utils/easing"
-
-const canvas = document.querySelector('.main-canvas')
-const ctx = canvas.getContext("2d")
-
-canvas.width = window.innerWidth * window.devicePixelRatio
-canvas.height = window.innerHeight * window.devicePixelRatio
-canvas.style.maxWidth = window.innerWidth
-canvas.style.maxHeight = window.innerHeight
-
-let canvasWidth = (canvas.width)
-let canvasHeight = (canvas.height)
-let cW2 = (canvas.width / 2)
-let cH2 = (canvas.height / 2)
-
-let maskLoaded = false
-
-let time = 0
-
-
-// à chaque image : 60fps
-const update = () => {
-    requestAnimationFrame(update)
-
-    time += .01
-
-    let mouseX = ((Mouse.cursor[0] + 1) / 2) * canvas.width
-    let mouseY = ((Mouse.cursor[1] + 1) / 2) * canvas.height
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-    let size = 200
-
-    ctx.save()
-
-    ctx.translate(mouseX, mouseY)
-    ctx.rotate(time)
-    ctx.scale(Math.sin(time), Math.sin(time))
-
-    ctx.beginPath()
-    ctx.strokeStyle = '#ffffff'
-    ctx.moveTo(-size / 2, size / 2)
-    ctx.lineTo(0, -size / 2)
-    ctx.lineTo(size / 2, size / 2)
-    ctx.lineTo(-size / 2, size / 2)
-    ctx.stroke()
-    ctx.closePath()
-
-    ctx.restore()
-
-    // 
-
-
+function setup() {
+    createCanvas(windowWidth, windowHeight, WEBGL);
+    cam = createCamera();
+    cam.move(0, 0, 6500)
+    title = document.getElementById("titre")
+    vid = document.getElementById("video")
+    canvas = document.getElementById('defaultCanvas0')
 }
-requestAnimationFrame(update)
+
+function draw() {
+    smooth()
+    background('#000000');
+
+    push()
+    translate(-423, -421, pos - 2000)
+    image(algue, 0,0);
+    pop()
+
+    a = a + 0.01
+
+    push()
+    strokeWeight(3)
+    stroke('white')
+    point(20, 50)
+    point(80, 50)
+    fill('black')
+    translate(-40, 500, pos)
+    rotate(a)
+    rect(-40, -40, 80, 80)
+    pop()
+
+    fill('#FFFFFF')
+    textSize(15)
+    push()
+    textFont(Helvetica)
+    translate(-75, 505, pos)
+    text('scroll'.toUpperCase(), 0, 0)
+    pop()
+
+    push()//RECT NOIR
+    strokeWeight(0);
+    blendMode(DARKEST);
+
+    fill(0,0,0, ((7000 - pos)/1000)*255);
+
+    translate(-500, -200, pos-10)
+    rect(0, 0, 1000, 400)
+    blendMode(BLEND);
+    pop()
+
+    fill('#FFFFFF')//TITLE
+    textSize(200)
+    push()
+    textFont(Helvetica)
+    translate(-935, 80, pos)
+    text('algae window'.toUpperCase(), 0, 0)
+    pop()
+
+    fill('#FFFFFF')
+    textSize(20)
+    push()
+    textFont(Helvetica)
+    translate(400, -50, pos-1000)
+    text(`Materials:${`\n`}${`\n`}- Glass spheres, ${`\n`}- Steel, ${`\n`}- Aluminium, ${`\n`}- Plastic, ${`\n`}- Paint (black)`,0,0)
+    pop()
+
+    fill('#FFFFFF')
+    textSize(20)
+    push()
+    textFont(Helvetica)
+    translate(-850, -100, pos-1000)
+    text(`Algae window is an arrangement ${`\n`}of glass spheres mounted in a wall. ${`\n`}Directly behind the wall and the spheres ${`\n`}is a window; vivid, miniature, inverted ${`\n`}views of the scene outside the gallery ${`\n`}thus appear in and inhabit each sphere. ${`\n`}The composition of the work closely ${`\n`}resembles the structure of one type ${`\n`}of the single-celled algae known as ${`\n`}diatoms, which remove large amounts ${`\n`}of carbon from the atmosphere.`,0,0)
+    pop()
+
+    // vid = createVideo('../assets/test.mp4', vidLoad);
+    // vid.size(100, 100)
+
+    // function vidLoad() {
+    //     vid.loop();
+    //     vid.volume(0);
+    //   }
+
+    orbitControl(.02, .02, .0001)
+
+    if (pos > 7100)
+        title.style.visibility = "visible"
+    else
+        title.style.visibility = "hidden"
+    
+    if (pos <= 9000)
+        canvas.style.visibility = "visible"
+    else
+        canvas.style.visibility = "hidden"
+
+    let o = 1 - (pos- 8600)/1000
+    canvas.style.opacity = o;
+}
+
+function mouseWheel(event) {
+    pos += event.delta;
+    if (pos < 6000) {
+        pos = 6000
+    }
+
+    if (pos > 9001) {
+        pos = 9001
+    }
+}
 
 
+(function(window, videojs) {
+    let player = window.player = videojs('videojs-vr-player');
+    player.mediainfo = player.mediainfo || {};
+    player.mediainfo.projection = '360';
+    player.controls(false);
 
-// let img = new Image()
-// img.src = "https://miro.medium.com/max/1068/0*WwAJP2U-pFbydOfi.jpeg"
-// img.onload = ()=>{
-//     console.log("l'image est chargée")
-// }
-
-// let mask = new Image()
-// mask.src = "https://images-ext-2.discordapp.net/external/iYBUoq3zm0M5LJDbHAX8xSMU0ZZGHQjaf60XYRcPD9U/http/designinteractif.gobelins.fr/wp-content/uploads/2018/11/cropped-Logo-Gobelins-1.png"
-// mask.onload = () => {
-//     maskLoaded = true
-// }
-
-// Blabla
-
-// let canvasWidth = (canvas.width)
-// let canvasHeight = (canvas.height)
-// let cW2 = (canvas.width / 2)
-// let cH2 = (canvas.height / 2)
-
-// ctx.beginPath()
-// ctx.strokeStyle = '#00aa00'
-// ctx.moveTo(canvasWidth / 2 - 50, canvasHeight / 2 + 50)
-// ctx.lineTo(canvasWidth / 2, canvasHeight / 2 - 50)
-// ctx.lineTo(canvasWidth / 2 + 50, canvasHeight / 2 + 50)
-// ctx.lineTo(canvasWidth / 2 - 50, canvasHeight / 2 + 50)
-// ctx.stroke()
-// ctx.closePath()
-
+    let vr = window.vr = player.vr({projection: 'EAC', debug: true, forceCardboard: false});
+  }(window, window.videojs));
 
